@@ -1,4 +1,4 @@
 {
-  "AllPublic": false,
-  "ExtendableAPI": false
+  "AllPublic": true,
+  "ExtendableAPI": true
 }

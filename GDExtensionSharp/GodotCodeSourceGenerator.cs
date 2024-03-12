@@ -3,6 +3,7 @@ using SharpFileDialog;
 using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace GDExtensionSharp;
 
@@ -29,6 +30,8 @@ public class GodotCodeSourceGenerator : ISourceGenerator
 		public bool AllPublic { get; set; }
 
 		public bool ExtendableAPI { get; set; }
+
+		public bool ForceReload { get; set; }
 	}
 
 	public static Options LoadedOptions;
@@ -69,6 +72,15 @@ public class GodotCodeSourceGenerator : ISourceGenerator
 		try {
 			if (!context.AnalyzerConfigOptions.GlobalOptions.TryGetValue("build_property.projectdir", out var currentPath)) {
 				SendError(1, "Failed to find Project Dir");
+			}
+			if (context.Compilation.Options is CSharpCompilationOptions compilationOptions) {
+				if (!compilationOptions.AllowUnsafe) {
+
+					SendError(5, "Enabling Unsafe Code");
+				}
+			}
+			else {
+				SendError(6, "Was not a CSharp Project");
 			}
 
 			var localJsonPath = Path.Combine(currentPath, "GDSharpConfig.local.json");
@@ -137,6 +149,7 @@ public class GodotCodeSourceGenerator : ISourceGenerator
 		}
 		catch (Exception ex) {
 			SendError(100, "Internal Error " + ex.Message, false);
+			SendError(101, "Internal Error StackTrace" + ex.StackTrace, false);
 		}
 	}
 

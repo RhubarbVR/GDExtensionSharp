@@ -22,18 +22,16 @@ public sealed class GodotBindingsBuilder(string godotLocation)
 		if (!Directory.Exists(worksDir)) {
 			Directory.CreateDirectory(worksDir);
 		}
+		var arg = string.Join(" ", args);
 		var runningProcess = Process.Start(new ProcessStartInfo {
 			WorkingDirectory = worksDir,
-			Arguments = string.Join(" ", args),
+			Arguments = arg,
 			FileName = fullPath,
-			UseShellExecute = false,
-			RedirectStandardError = true,
-			RedirectStandardOutput = true,
 		});
 		runningProcess.WaitForExit();
 	}
 
-	public class CahceInfo
+	public class CacheInfo
 	{
 		public string EngineVersion { get; set; }
 		public int GenVersion { get; set; }
@@ -50,7 +48,7 @@ public sealed class GodotBindingsBuilder(string godotLocation)
 
 		var apiJson = JObject.Parse(File.ReadAllText(jsonFile));
 
-		var currentCacheInfoJson = JObject.FromObject(new CahceInfo {
+		var currentCacheInfoJson = JObject.FromObject(new CacheInfo {
 			EngineVersion = (string)apiJson["header"]["version_full_name"],
 			loadedOptions = loadedOptions,
 			GenVersion = 1
@@ -66,10 +64,14 @@ public sealed class GodotBindingsBuilder(string godotLocation)
 		if (!Directory.Exists(cacheDir)) {
 			readFromCache = false;
 		}
+		if (GodotCodeSourceGenerator.LoadedOptions.ForceReload) {
+			readFromCache = false;
+		}
 		if (readFromCache) {
 			return Directory.GetFiles(cacheDir);
 		}
-		new GodotFilesGenerate(apiJson, jsonFile, cacheDir, allGenFiles).GenerateFiles();
+		var docs = Path.Combine(WorkingDir, "doc", "classes") + "/";
+		new GodotFilesGenerate(apiJson, jsonFile, docs, cacheDir, allGenFiles).GenerateFiles();
 		File.WriteAllText(cacheInfoJson, currentCacheInfoJson);
 		return allGenFiles;
 	}

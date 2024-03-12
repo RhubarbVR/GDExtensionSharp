@@ -9,6 +9,29 @@ public static class NameConverter
 		return name.Replace(".", "");
 	}
 
+	public static string MethodName(string name) {
+		var res = "";
+		var parts = name.Split('.');
+		for (var i = 0; i < parts.Length - 1; i++) {
+			res += parts[i] + ".";
+		}
+		var last = NameConverter.SnakeToPascal(parts.Last());
+		return res + last switch {
+			"GetType" => "GetTypeGD",
+			_ => last,
+		};
+	}
+
+	public static string MakeType(string name) {
+
+		return name;
+	}
+
+	public static string ConvertTypeName(string name) {
+
+		return name;
+	}
+
 	public static string SnakeToPascal(string name) {
 		var res = "";
 		foreach (var w in name.Split('_')) {
@@ -26,5 +49,4 @@ public static class NameConverter
 		}
 		return res;
 	}
-
 }
