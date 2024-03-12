@@ -4,12 +4,11 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<GodotSharpEditorLocation>dwa</GodotSharpEditorLocation>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\GDExtensionSharp\GDExtensionSharp.csproj"
-						  OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\GDExtensionSharp\GDExtensionSharp.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>

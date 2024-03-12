@@ -69,7 +69,7 @@ public sealed class GodotBindingsBuilder(string godotLocation)
 		if (readFromCache) {
 			return Directory.GetFiles(cacheDir);
 		}
-		new GodotFilesGenerate(apiJson, cacheDir, allGenFiles).GenerateFiles();
+		new GodotFilesGenerate(apiJson, jsonFile, cacheDir, allGenFiles).GenerateFiles();
 		File.WriteAllText(cacheInfoJson, currentCacheInfoJson);
 		return allGenFiles;
 	}
